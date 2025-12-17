@@ -1,608 +1,647 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zayn Silva | Social Media Strategist</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        'brand-black': '#0a0a0a',
-                        'brand-dark': '#121212',
-                        'brand-accent': '#ff3333',
-                        'brand-gray': '#2a2a2a',
-                        'brand-light-gray': '#888888',
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Oswald', 'sans-serif'], 
+                        manrope: ['Manrope', 'sans-serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        neon: '#FF3333', 
+                        dark: '#050505',
+                        surface: '#0A0A0A',
+                        'surface-highlight': '#121212',
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'spin-slow': 'spin 12s linear infinite',
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #121212; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        body {
+            background-color: #050505;
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* Cinematic Noise Overlay */
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF3333; }
+
+        /* Typography Utilities */
+        .text-balance { text-wrap: balance; }
         
-        /* Custom Table Styling for Calendar */
-        .strategy-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
+        /* Animations */
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
-        .strategy-table th, .strategy-table td {
-            border: 1px solid #333;
-            padding: 1rem;
-            text-align: left;
-        }
-        .strategy-table th {
-            background-color: #1a1a1a;
-            color: #fff;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-        }
-        .strategy-table td {
-            background-color: #121212;
-            color: #ccc;
-            font-size: 0.9rem;
-            vertical-align: top;
-        }
+        .animate-marquee { animation: marquee 30s linear infinite; }
         
-        /* Smooth Fade In */
-        .fade-in-up {
+        .fade-in {
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 0.8s forwards;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glass Cards */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .glass-panel:hover {
+            border-color: rgba(255, 51, 51, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::selection {
+            background: #FF3333;
+            color: white;
+        }
+
+        /* Chart Animations */
+        .chart-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+        }
+        .chart-path.active {
+            animation: drawLine 2.5s ease-out forwards;
+        }
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        .chart-point {
+            opacity: 0;
+            transform: scale(0);
+            transform-origin: center;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .chart-point.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .chart-area {
+            opacity: 0;
+            transition: opacity 1.5s ease-out;
+        }
+        .chart-area.active {
+            opacity: 1;
         }
     </style>
 </head>
-<body class="bg-brand-black text-white font-sans antialiased selection:bg-brand-accent selection:text-white">
+<body class="font-manrope antialiased">
+
+    <div class="noise-bg"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-brand-black/95 backdrop-blur-sm border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="font-display text-2xl tracking-tighter uppercase font-bold text-white">
-                Zayn Silva<span class="text-brand-accent">.</span>
-            </a>
-            <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest text-brand-light-gray font-medium">
-                <a href="#metrics" class="hover:text-white transition-colors">Impact</a>
-                <a href="#strategy" class="hover:text-white transition-colors">Strategy</a>
-                <a href="#growth" class="hover:text-white transition-colors">Growth</a>
-                <a href="#community" class="hover:text-white transition-colors">Community</a>
-                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+    <nav class="fixed top-0 left-0 w-full z-[60] py-6 bg-dark/80 backdrop-blur-md border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold tracking-tighter hover:text-white transition-colors">ZAYN<span class="text-neon">.</span></a>
+            <div class="hidden md:flex items-center gap-10">
+                <a href="#about" class="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-neon transition-colors">About</a>
+                <a href="#impact" class="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-neon transition-colors">Impact</a>
+                <a href="#strategy" class="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-neon transition-colors">Strategy</a>
+                <a href="#work" class="text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-neon transition-colors">Work</a>
             </div>
-            <button class="md:hidden text-white text-xl">
-                <i class="fas fa-bars"></i>
-            </button>
+            <a href="#contact" class="hidden md:block w-2 h-2 rounded-full bg-neon animate-pulse"></a>
         </div>
     </nav>
 
-    <!-- 1. HERO SECTION -->
-    <header class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
-        <!-- Subtle background elements -->
-        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-dark to-brand-black z-0"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-accent/5 rounded-full blur-[120px]"></div>
+    <!-- HERO SECTION -->
+    <header id="about" class="min-h-screen flex flex-col justify-center px-6 relative pt-32 pb-20">
+        <!-- Ambient Glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neon rounded-full blur-[250px] opacity-10 pointer-events-none"></div>
 
-        <div class="max-w-5xl mx-auto px-6 relative z-10 text-center">
-            <h2 class="text-brand-accent font-mono text-sm mb-6 tracking-widest uppercase font-bold">Social Media Strategist & Digital Storyteller</h2>
-            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-8 tracking-tight">
-                Design systems. <br />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Drive outcomes.</span>
-            </h1>
-            <p class="text-gray-300 text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed font-light">
-                I design and run social media systems that grow audiences, convert engagement into action, and help brands show up clearly during high-stakes moments.
-            </p>
+        <div class="max-w-7xl mx-auto w-full relative z-10 fade-in">
             
-            <!-- Skill Tags -->
-            <div class="flex flex-wrap justify-center gap-3 mb-12 text-sm text-gray-400 font-mono">
-                <span class="px-3 py-1 border border-white/10 rounded-full">Social Strategy</span>
-                <span class="px-3 py-1 border border-white/10 rounded-full">Editorial Calendars</span>
-                <span class="px-3 py-1 border border-white/10 rounded-full">Community Growth</span>
-                <span class="px-3 py-1 border border-white/10 rounded-full">Executive Social</span>
-                <span class="px-3 py-1 border border-white/10 rounded-full">Analytics & Optimization</span>
+            <!-- Pulsing Dot Status -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-neon"></span>
+                </div>
+                <span class="text-neon text-xs font-bold tracking-[0.2em] uppercase">Online & Available</span>
             </div>
 
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                <a href="#metrics" class="px-8 py-4 bg-white text-brand-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-all">
-                    View Case Studies
-                </a>
-                <!-- RESUME LINK HERE -->
-                <a href="Zayn_Silva_Social_Media_Resume.docx" class="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-wider hover:bg-white/10 transition-all" download>
-                    Download Resume
-                </a>
-                <a href="#contact" class="px-8 py-4 text-gray-400 hover:text-white transition-colors underline underline-offset-4">
-                    Contact
-                </a>
+            <!-- Smaller, Left-Aligned Headline -->
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-[1.1] mb-12 max-w-4xl text-left">
+                I don't just post content; <br /> I cultivate <span class="text-neon italic font-playfair">communities.</span>
+            </h1>
+
+            <div class="grid md:grid-cols-[auto_1fr] gap-12 items-start text-left mt-12">
+                <!-- Headshot -->
+                <div class="relative w-full md:w-80 aspect-[3/4] group mr-auto">
+                    <div class="absolute inset-0 border border-neon/50 translate-x-3 translate-y-3 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
+                    <img src="images/zayn-headshot.jpg" onerror="this.src='https://placehold.co/600x800/111/444?text=Zayn+Headshot'" class="w-full h-full object-cover relative z-10 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Zayn Silva">
+                </div>
+                
+                <!-- Bio -->
+                <div class="text-gray-400 text-lg leading-relaxed space-y-8 pt-2">
+                    <p class="text-xl text-white font-light">
+                        I am a professional <strong class="text-neon">Digital Creator and Brand Strategist</strong> with a passion for social impact. My work sits at the intersection of design and advocacy.
+                    </p>
+                    <p>
+                        I help organizations translate their mission into digital movements that convert attention into action. Whether through viral campaigns or long-term community building, I ensure every piece of content serves a purpose.
+                    </p>
+                    
+                    <div class="flex gap-6 pt-4">
+                        <a href="#work" class="px-8 py-3 bg-white text-black font-bold text-xs tracking-[0.2em] hover:bg-gray-200 transition-all uppercase">
+                            View Work
+                        </a>
+                        <a href="#contact" class="px-8 py-3 border border-white/20 text-white font-bold text-xs tracking-[0.2em] hover:bg-white/10 transition-all uppercase">
+                            Hire Me
+                        </a>
+                    </div>
+
+                    <!-- Badge -->
+                    <div class="flex items-center gap-4 pt-8 border-t border-white/10">
+                        <i data-lucide="instagram" class="w-6 h-6 hover:text-neon cursor-pointer transition-colors"></i>
+                        <i data-lucide="linkedin" class="w-6 h-6 hover:text-neon cursor-pointer transition-colors"></i>
+                        <span class="text-xs uppercase tracking-widest ml-auto flex items-center gap-2">
+                            <span class="w-2 h-2 bg-neon rounded-full"></span> New York, NY
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 2. METRICS SNAPSHOT -->
-    <section id="metrics" class="py-20 bg-brand-dark border-y border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="mb-12">
-                <h2 class="font-display text-3xl font-bold mb-2">Impact Snapshot</h2>
-                <p class="text-brand-light-gray">Measurable results from recent campaigns and community initiatives.</p>
-            </div>
+    <!-- MARQUEE -->
+    <div class="w-full bg-neon py-3 overflow-hidden -rotate-1 relative z-20 border-y-4 border-black mb-20">
+        <div class="whitespace-nowrap flex animate-marquee">
+            <span class="text-black font-extrabold text-xl md:text-2xl mx-6 uppercase tracking-widest">
+                STRATEGY • DESIGN SYSTEMS • COMMUNITY GROWTH • ANALYTICS • DIGITAL STORYTELLING • CAMPAIGNS • STRATEGY • DESIGN SYSTEMS • COMMUNITY GROWTH • ANALYTICS • DIGITAL STORYTELLING • CAMPAIGNS •
+            </span>
+            <span class="text-black font-extrabold text-xl md:text-2xl mx-6 uppercase tracking-widest">
+                STRATEGY • DESIGN SYSTEMS • COMMUNITY GROWTH • ANALYTICS • DIGITAL STORYTELLING • CAMPAIGNS • STRATEGY • DESIGN SYSTEMS • COMMUNITY GROWTH • ANALYTICS • DIGITAL STORYTELLING • CAMPAIGNS •
+            </span>
+        </div>
+    </div>
+
+    <!-- IMPACT METRICS -->
+    <section id="impact" class="py-24 px-6 bg-surface">
+        <div class="max-w-7xl mx-auto">
+            <h3 class="text-neon text-xs font-bold tracking-[0.2em] uppercase mb-16 fade-in">Recent Performance Metrics</h3>
             
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                <!-- Metric Card 1 -->
-                <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">266K+</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Reels Views</div>
-                </div>
-                 <!-- Metric Card 2 -->
-                 <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">186K</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Accounts Reached</div>
-                </div>
-                 <!-- Metric Card 3 -->
-                 <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">91%</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Reach from Non-Followers</div>
-                </div>
-                 <!-- Metric Card 4 -->
-                 <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-brand-accent mb-2">41%</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Newsletter Open Rate</div>
-                    <div class="text-xs text-gray-500 mt-1">Up from 20%</div>
-                </div>
-                 <!-- Metric Card 5 -->
-                 <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-brand-accent mb-2">167%</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Executive Social Growth</div>
-                    <div class="text-xs text-gray-500 mt-1">12K &rarr; 32K Followers</div>
-                </div>
-                 <!-- Metric Card 6 -->
-                 <div class="bg-brand-black p-6 border border-white/10 rounded-lg">
-                    <div class="text-3xl md:text-4xl font-bold text-white mb-2">669%</div>
-                    <div class="text-sm text-brand-light-gray uppercase tracking-wider">Newsletter Growth</div>
-                    <div class="text-xs text-gray-500 mt-1">13K to 100K Subscribers</div>
-                </div>
-            </div>
-
-            <div class="mt-12 text-center border-t border-white/5 pt-8">
-                <p class="text-xl text-gray-300 italic font-light">"I measure success through engagement quality, conversion, growth rate, and sustained audience trust."</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- 3. SOCIAL STRATEGY SYSTEM (CALENDAR) -->
-    <section id="strategy" class="py-24 bg-brand-black">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row gap-12 items-start">
-                
-                <!-- Text Content -->
-                <div class="md:w-1/3">
-                    <div class="sticky top-24">
-                        <h2 class="font-display text-4xl font-bold mb-6">Social Strategy & Editorial Planning</h2>
-                        <div class="w-12 h-1 bg-brand-accent mb-6"></div>
-                        <p class="text-gray-300 mb-6 leading-relaxed">
-                            I don’t post reactively. I build editorial systems that balance planned content, timely moments, and real-time iteration.
-                        </p>
-                        <p class="text-gray-300 mb-6 leading-relaxed">
-                            My calendars align platform goals, audience behavior, and organizational priorities so social media drives outcomes, not noise.
-                        </p>
-                        <p class="text-sm text-brand-light-gray border-l-2 border-brand-accent pl-4">
-                            This calendar format was used to coordinate social, email, and live events across multiple platforms.
-                        </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 fade-in">
+                <!-- Metric 1 -->
+                <div class="glass-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="play-circle" class="w-16 h-16"></i>
                     </div>
-                </div>
-
-                <!-- Visual Calendar Mockup -->
-                <div class="md:w-2/3 w-full overflow-x-auto">
-                    <div class="bg-brand-dark p-6 rounded-xl border border-white/10 shadow-2xl min-w-[600px]">
-                        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                            <h3 class="font-mono text-sm uppercase text-gray-400">Master Editorial Calendar</h3>
-                            <div class="flex gap-2">
-                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                            </div>
-                        </div>
-
-                        <table class="strategy-table">
-                            <thead>
-                                <tr>
-                                    <th class="w-24">Phase</th>
-                                    <th>Theme & Focus</th>
-                                    <th>Instagram (Visual)</th>
-                                    <th>LinkedIn (B2B/Exec)</th>
-                                    <th>KPI</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="font-mono text-xs text-brand-accent">Week 1</td>
-                                    <td>
-                                        <strong class="block text-white mb-1">Awareness</strong>
-                                        <span class="text-xs">Top of Funnel</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-blue-900/30 text-blue-200 text-xs px-2 py-1 rounded mb-1">Reel: Trend Hook</span>
-                                        <span class="block bg-purple-900/30 text-purple-200 text-xs px-2 py-1 rounded">Carousel: "5 Reasons Why"</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">Founder Thought Leadership</span>
-                                    </td>
-                                    <td class="text-xs font-mono">Reach & Impressions</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-mono text-xs text-brand-accent">Week 2</td>
-                                    <td>
-                                        <strong class="block text-white mb-1">Education</strong>
-                                        <span class="text-xs">Trust Building</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-blue-900/30 text-blue-200 text-xs px-2 py-1 rounded mb-1">Infographic: Data</span>
-                                        <span class="block bg-green-900/30 text-green-200 text-xs px-2 py-1 rounded">Live Q&A Teaser</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">Case Study Snippet</span>
-                                    </td>
-                                    <td class="text-xs font-mono">Saves & Shares</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-mono text-xs text-brand-accent">Week 3</td>
-                                    <td>
-                                        <strong class="block text-white mb-1">Activation</strong>
-                                        <span class="text-xs">Community Push</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-pink-900/30 text-pink-200 text-xs px-2 py-1 rounded mb-1">UGC Spotlight</span>
-                                        <span class="block bg-green-900/30 text-green-200 text-xs px-2 py-1 rounded">Countdown Story</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">Event Invite</span>
-                                    </td>
-                                    <td class="text-xs font-mono">Clicks & RSVPs</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-mono text-xs text-brand-accent">Week 4</td>
-                                    <td>
-                                        <strong class="block text-white mb-1">Conversion</strong>
-                                        <span class="text-xs">Decision</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-orange-900/30 text-orange-200 text-xs px-2 py-1 rounded mb-1">Testimonial Reel</span>
-                                        <span class="block bg-red-900/30 text-red-200 text-xs px-2 py-1 rounded">Link in Bio CTA</span>
-                                    </td>
-                                    <td>
-                                        <span class="block bg-gray-800 text-gray-300 text-xs px-2 py-1 rounded">Final Call Post</span>
-                                    </td>
-                                    <td class="text-xs font-mono">Signups</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-white counter" data-target="266">0</h3>
+                        <span class="text-5xl font-bold text-white">K+</span>
                     </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Reels Views</p>
+                </div>
+                <!-- Metric 2 -->
+                <div class="glass-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="users" class="w-16 h-16"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-white counter" data-target="186">0</h3>
+                        <span class="text-5xl font-bold text-white">K</span>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Accounts Reached</p>
+                </div>
+                <!-- Metric 3 -->
+                <div class="glass-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="globe" class="w-16 h-16"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-white counter" data-target="91">0</h3>
+                        <span class="text-5xl font-bold text-white">%</span>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Non-Follower Reach</p>
+                </div>
+                <!-- Metric 4 -->
+                <div class="glass-panel p-10 group relative overflow-hidden border-neon/20">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="mail-open" class="w-16 h-16 text-neon"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-neon counter" data-target="41">0</h3>
+                        <span class="text-5xl font-bold text-neon">%</span>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Open Rate (Avg)</p>
+                </div>
+                <!-- Metric 5 -->
+                <div class="glass-panel p-10 group relative overflow-hidden border-neon/20">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="trending-up" class="w-16 h-16 text-neon"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-neon counter" data-target="167">0</h3>
+                        <span class="text-5xl font-bold text-neon">%</span>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Exec Social Growth</p>
+                </div>
+                <!-- Metric 6 -->
+                <div class="glass-panel p-10 group relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="user-plus" class="w-16 h-16"></i>
+                    </div>
+                    <div class="flex items-baseline gap-1 mb-2 relative z-10">
+                        <h3 class="text-5xl font-bold text-white counter" data-target="669">0</h3>
+                        <span class="text-5xl font-bold text-white">%</span>
+                    </div>
+                    <p class="text-xs uppercase tracking-[0.2em] text-gray-500 relative z-10">Newsletter Growth</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 4. CASE STUDY: SOCIAL GROWTH -->
-    <section id="growth" class="py-24 bg-brand-dark border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                <!-- Visuals -->
-                <div class="order-2 md:order-1 grid gap-6">
-                    <img src="images/1-event-king.jpg" onerror="this.src='https://placehold.co/600x800/222/FFF?text=Image+1-event-king.jpg'" alt="Viral Event Campaign" class="w-full rounded-lg shadow-2xl border border-white/5 opacity-90 hover:opacity-100 transition-opacity">
-                    <img src="images/5-social-lineup.jpg" onerror="this.src='https://placehold.co/600x800/222/FFF?text=Image+5-social-lineup.jpg'" alt="Social Lineup Asset" class="w-full rounded-lg shadow-2xl border border-white/5 opacity-90 hover:opacity-100 transition-opacity">
+    <!-- STRATEGY (Elevated Table) -->
+    <section id="strategy" class="py-32 px-6 bg-[#080808] border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col lg:flex-row gap-16 items-start mb-16 fade-in">
+                <div class="lg:w-1/2">
+                    <h2 class="text-xs text-neon tracking-[0.2em] uppercase mb-4">Editorial System</h2>
+                    <h3 class="text-3xl md:text-4xl font-bold leading-tight mb-6">
+                        Aligning content, timing, and platform behavior for maximum impact.
+                    </h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        My calendars align platform goals, audience behavior, and organizational priorities so social media drives outcomes not noise.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Elevated Grid System -->
+            <div class="border border-white/10 rounded-xl overflow-hidden fade-in">
+                <!-- Header -->
+                <div class="grid grid-cols-12 bg-[#111] border-b border-white/10 p-4 text-[10px] uppercase tracking-widest text-gray-500 font-medium hidden md:grid">
+                    <div class="col-span-1">Phase</div>
+                    <div class="col-span-3">Theme & Focus</div>
+                    <div class="col-span-3">Instagram Visual</div>
+                    <div class="col-span-3">LinkedIn B2B & Exec</div>
+                    <div class="col-span-2 text-right">KPI</div>
                 </div>
 
-                <!-- Text Content -->
-                <div class="order-1 md:order-2">
-                    <span class="text-brand-accent font-mono text-sm tracking-widest uppercase mb-2 block">Case Study 01</span>
-                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">Social Growth & Viral Reach</h2>
-                    
-                    <div class="space-y-8">
-                        <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Context</h3>
-                            <p class="text-gray-400 leading-relaxed">
-                                Owned social strategy and execution, transforming underperforming channels into high-growth platforms through organic content only. Focused on identifying platform-specific levers for reach.
-                            </p>
-                        </div>
-
-                        <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Strategy & Execution</h3>
-                            <ul class="list-disc list-outside ml-5 text-gray-400 space-y-2">
-                                <li>Built platform-specific editorial calendars to ensure consistency.</li>
-                                <li>Wrote copy optimized for SEO discovery and "save-able" utility.</li>
-                                <li>Designed all visuals in Canva/Figma, adhering to strict brand guidelines.</li>
-                                <li>Iterated content themes weekly using performance data to double-down on winners.</li>
-                                <li>Balanced authoritative brand voice with cultural relevance.</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Outcomes</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-chart-line text-green-500 mr-3 w-4"></i>
-                                    Average reach grew from 1K &rarr; 10K &rarr; 77K
-                                </li>
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-bolt text-yellow-500 mr-3 w-4"></i>
-                                    First viral post exceeded historical averages by 400%
-                                </li>
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-video text-brand-accent mr-3 w-4"></i>
-                                    266K+ views on single short-form video
-                                </li>
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-users text-blue-500 mr-3 w-4"></i>
-                                    91% of reach generated from non-followers (discovery)
-                                </li>
-                            </ul>
-                        </div>
+                <!-- Week 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 bg-dark border-b border-white/5 p-6 hover:bg-white/[0.02] transition-colors group">
+                    <div class="md:col-span-1 text-neon font-bold mb-2 md:mb-0">Week 1</div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <strong class="block text-white text-sm">Awareness</strong>
+                        <span class="text-xs text-gray-500">Top of funnel</span>
                     </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0 flex flex-col items-start gap-2">
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Reel trend hook</div>
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Carousel five reasons why</div>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <div class="text-xs text-gray-300">Founder thought leadership</div>
+                    </div>
+                    <div class="md:col-span-2 text-gray-400 text-xs md:text-right font-mono">Reach and impressions</div>
+                </div>
+
+                <!-- Week 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 bg-dark border-b border-white/5 p-6 hover:bg-white/[0.02] transition-colors group">
+                    <div class="md:col-span-1 text-neon font-bold mb-2 md:mb-0">Week 2</div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <strong class="block text-white text-sm">Education</strong>
+                        <span class="text-xs text-gray-500">Trust building</span>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0 flex flex-col items-start gap-2">
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Infographic data</div>
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Live Q and A teaser</div>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <div class="text-xs text-gray-300">Case study snippet</div>
+                    </div>
+                    <div class="md:col-span-2 text-gray-400 text-xs md:text-right font-mono">Saves and shares</div>
+                </div>
+
+                <!-- Week 3 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 bg-dark border-b border-white/5 p-6 hover:bg-white/[0.02] transition-colors group">
+                    <div class="md:col-span-1 text-neon font-bold mb-2 md:mb-0">Week 3</div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <strong class="block text-white text-sm">Activation</strong>
+                        <span class="text-xs text-gray-500">Community push</span>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0 flex flex-col items-start gap-2">
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">UGC spotlight</div>
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Countdown story</div>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <div class="text-xs text-gray-300">Event invite</div>
+                    </div>
+                    <div class="md:col-span-2 text-gray-400 text-xs md:text-right font-mono">Clicks and RSVPs</div>
+                </div>
+
+                <!-- Week 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 bg-dark p-6 hover:bg-neon/5 transition-colors group border-l-2 border-l-transparent hover:border-l-neon">
+                    <div class="md:col-span-1 text-neon font-bold mb-2 md:mb-0">Week 4</div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <strong class="block text-white text-sm">Conversion</strong>
+                        <span class="text-xs text-gray-500">Decision</span>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0 flex flex-col items-start gap-2">
+                        <div class="text-xs text-gray-300 bg-white/5 px-2 py-1 rounded">Testimonial reel</div>
+                        <div class="text-xs text-neon bg-neon/10 border border-neon/20 px-2 py-1 rounded">Link in bio CTA</div>
+                    </div>
+                    <div class="md:col-span-3 mb-4 md:mb-0">
+                        <div class="text-xs text-gray-300">Final call post</div>
+                    </div>
+                    <div class="md:col-span-2 text-white font-bold text-xs md:text-right font-mono">Signups</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 5. CASE STUDY: COMMUNITY ACTIVATION (BUBBLE) -->
-    <section id="community" class="py-24 bg-brand-black">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                
-                <!-- Text Content -->
-                <div>
-                    <span class="text-brand-accent font-mono text-sm tracking-widest uppercase mb-2 block">Case Study 02</span>
-                    <h2 class="font-display text-4xl md:text-5xl font-bold mb-6">Community Activation & Conversion (Bubble.io)</h2>
-                    
-                    <div class="space-y-8">
-                        <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Context</h3>
-                            <p class="text-gray-400 leading-relaxed">
-                                Led community-driven social strategy to increase participation in a women-led accelerator cohort within a B2B SaaS environment.
-                            </p>
-                        </div>
+    <!-- CASE STUDIES -->
+    <section id="work" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-xs text-neon tracking-[0.2em] uppercase mb-20 fade-in">Case Studies</h2>
 
+            <!-- Case 1 -->
+            <div class="grid md:grid-cols-2 gap-12 mb-32 group fade-in">
+                <div class="relative rounded-lg border border-white/5 flex items-center justify-center bg-[#050505] overflow-hidden min-h-[600px]">
+                    <!-- Switched to Direct Iframe for immediate video rendering -->
+                    <iframe 
+                        class="w-full h-full absolute inset-0"
+                        src="https://www.instagram.com/reel/DOmd43BDDlD/embed" 
+                        frameborder="0" 
+                        scrolling="no" 
+                        allowtransparency="true" 
+                        allow="encrypted-media">
+                    </iframe>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-3xl font-bold mb-6 text-white">Organic Viral Growth Strategy</h3>
+                    <div class="space-y-6 text-sm text-gray-400 border-l border-white/10 pl-6">
                         <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Strategy & Execution</h3>
-                            <ul class="list-disc list-outside ml-5 text-gray-400 space-y-2">
-                                <li>Activated niche Slack communities through direct, high-value value messaging.</li>
-                                <li>Facilitated LinkedIn Live events to drive real-time engagement and Q&A.</li>
-                                <li>Encouraged peer-to-peer amplification through direct influencer outreach.</li>
-                                <li>Leveraged social proof (testimonials) to drive referrals.</li>
-                                <li>Coordinated unified messaging across Slack, LinkedIn, and email channels.</li>
-                            </ul>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Context</h4>
+                            <p>Transformed an underperforming organizational channel with stagnant reach (avg. 1K) into a high-growth platform.</p>
                         </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Strategy</h4>
+                            <p>Implemented a "Hook-Value-CTA" framework for short-form video. Optimized SEO keywords in captions and leveraged trending audio within the first 48 hours of velocity.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Outcome</h4>
+                            <p class="text-white font-bold">266K+ organic views on a single reel, 91% reach from non-followers, and a 400% increase in profile visits.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Case 2 -->
+            <div class="grid md:grid-cols-2 gap-12 mb-32 group fade-in">
+                <div class="order-2 md:order-1 flex flex-col justify-center text-right">
+                    <h3 class="text-3xl font-bold mb-6 text-white">Bubble.io Community Activation</h3>
+                    <div class="space-y-6 text-sm text-gray-400 border-r border-white/10 pr-6">
                         <div>
-                            <h3 class="text-white font-bold mb-2 border-b border-white/10 pb-1 inline-block">Outcomes</h3>
-                            <ul class="space-y-2">
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-arrow-up text-green-500 mr-3 w-4"></i>
-                                    Applications for women-led cohort increased by 30%
-                                </li>
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-check-circle text-blue-500 mr-3 w-4"></i>
-                                    Increased participation without paid advertising spend
-                                </li>
-                                <li class="flex items-center text-gray-300">
-                                    <i class="fas fa-heart text-brand-accent mr-3 w-4"></i>
-                                    Strengthened long-term community engagement and retention
-                                </li>
-                            </ul>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Context</h4>
+                            <p>B2B SaaS platform needed to increase diversity in their accelerator cohort without increasing paid ad spend.</p>
                         </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Strategy</h4>
+                            <p>Shifted from broadcast messaging to peer-to-peer activation. Facilitated LinkedIn Lives with alumni and activated niche Slack communities.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Outcome</h4>
+                            <p class="text-white font-bold">30% increase in qualified applications and strengthened long-term retention in the community ecosystem.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 relative rounded-lg overflow-hidden h-[400px] border border-white/5">
+                    <img src="images/3-tech-bubble.jpg" onerror="this.src='https://placehold.co/800x600/111/444?text=Community+Tech'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0" alt="Bubble Community">
+                </div>
+            </div>
+
+            <!-- Case 3 -->
+            <div class="grid md:grid-cols-2 gap-12 group fade-in chart-container">
+                <div class="relative rounded-lg overflow-hidden h-[400px] bg-[#0c0c0c] p-8 flex items-center justify-center border border-white/5">
+                    <!-- Advanced Animated SVG Chart -->
+                    <svg viewBox="0 0 400 250" class="w-full h-full overflow-visible">
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#FF3333" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#FF3333" stop-opacity="0"/>
+                            </linearGradient>
+                        </defs>
                         
-                        <p class="text-sm text-brand-light-gray italic border-l-2 border-white/20 pl-4 mt-6">
-                            "This work demonstrates how social media can function as a conversion engine, not just a visibility channel."
-                        </p>
-                    </div>
-                </div>
+                        <!-- Grid Lines -->
+                        <line x1="50" y1="200" x2="350" y2="200" stroke="#333" stroke-width="1" stroke-dasharray="4 4" />
+                        <line x1="50" y1="120" x2="350" y2="120" stroke="#333" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
+                        <line x1="50" y1="40" x2="350" y2="40" stroke="#333" stroke-width="1" stroke-dasharray="4 4" opacity="0.5" />
 
-                <!-- Visuals -->
-                <div>
-                    <img src="images/3-tech-bubble.jpg" onerror="this.src='https://placehold.co/600x800/222/FFF?text=Image+3-tech-bubble.jpg'" alt="Bubble Community Campaign" class="w-full rounded-lg shadow-2xl border border-white/5">
+                        <!-- Area Fill -->
+                        <path class="chart-area transition-delay-[1000ms]" d="M50 200 L50 150 L150 120 L250 80 L350 40 L350 200 Z" fill="url(#chartGradient)" />
+
+                        <!-- Line Path -->
+                        <path class="chart-path" d="M50 150 L150 120 L250 80 L350 40" fill="none" stroke="#FF3333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                        
+                        <!-- Points & Labels -->
+                        <!-- Q1 -->
+                        <g class="chart-point" style="transition-delay: 0.5s">
+                            <circle cx="50" cy="150" r="6" fill="#050505" stroke="#FF3333" stroke-width="2" />
+                            <text x="50" y="220" fill="#666" font-size="12" text-anchor="middle" font-family="Manrope">Q1</text>
+                            <text x="50" y="135" fill="white" font-size="12" font-weight="bold" text-anchor="middle">20%</text>
+                        </g>
+                        
+                        <!-- Q2 -->
+                        <g class="chart-point" style="transition-delay: 1.0s">
+                            <circle cx="150" cy="120" r="6" fill="#050505" stroke="#FF3333" stroke-width="2" />
+                            <text x="150" y="220" fill="#666" font-size="12" text-anchor="middle" font-family="Manrope">Q2</text>
+                            <text x="150" y="105" fill="white" font-size="12" font-weight="bold" text-anchor="middle">28%</text>
+                        </g>
+                        
+                        <!-- Q3 -->
+                        <g class="chart-point" style="transition-delay: 1.5s">
+                            <circle cx="250" cy="80" r="6" fill="#050505" stroke="#FF3333" stroke-width="2" />
+                            <text x="250" y="220" fill="#666" font-size="12" text-anchor="middle" font-family="Manrope">Q3</text>
+                            <text x="250" y="65" fill="white" font-size="12" font-weight="bold" text-anchor="middle">35%</text>
+                        </g>
+                        
+                        <!-- Q4 (Highlighted) -->
+                        <g class="chart-point" style="transition-delay: 2.0s">
+                            <circle cx="350" cy="40" r="8" fill="#FF3333" stroke="white" stroke-width="2" />
+                            <circle cx="350" cy="40" r="15" fill="#FF3333" fill-opacity="0.2" class="animate-pulse" />
+                            <text x="350" y="220" fill="#666" font-size="12" text-anchor="middle" font-family="Manrope">Q4</text>
+                            <rect x="315" y="5" width="70" height="24" rx="4" fill="#FF3333" />
+                            <text x="350" y="22" fill="black" font-size="12" font-weight="bold" text-anchor="middle">41%</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <h3 class="text-3xl font-bold mb-6 text-white">Newsletter Retention Ecosystem</h3>
+                    <div class="space-y-6 text-sm text-gray-400 border-l border-white/10 pl-6">
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Context</h4>
+                            <p>Social following was growing, but owned audience (email) engagement was stagnant at 20% open rate.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Strategy</h4>
+                            <p>Aligned email content with social trending topics. A/B tested subject lines for urgency vs. curiosity. Cleaned list hygiene to improve deliverability.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-neon uppercase tracking-widest text-[10px] mb-1">Outcome</h4>
+                            <p class="text-white font-bold">Open rates doubled to 41%, subscribers grew by 27%, and the newsletter became a primary driver for event ticket sales.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 6. CASE STUDY: EMAIL & NEWSLETTER GROWTH -->
-    <section class="py-24 bg-brand-dark border-t border-white/5">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="text-center mb-12">
-                <span class="text-brand-accent font-mono text-sm tracking-widest uppercase mb-2 block">Case Study 03</span>
-                <h2 class="font-display text-4xl md:text-5xl font-bold mb-4">Email & Newsletter Growth</h2>
-                <p class="text-gray-400">Owned long-form content and email strategy to convert social reach into sustained audience engagement.</p>
-            </div>
-
-            <div class="bg-brand-black p-8 rounded-2xl border border-white/10 mb-12">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="text-white font-bold mb-4">Tactics</h3>
-                        <ul class="list-disc list-outside ml-5 text-gray-400 space-y-2 text-sm">
-                            <li>Wrote weekly Substack posts focused on actionable insights.</li>
-                            <li>Optimized subject lines and CTAs for higher CTR.</li>
-                            <li>Coordinated email timing to sync with social conversations.</li>
-                            <li>Used analytics to refine content themes based on open rates.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-white font-bold mb-4">Key Results</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-brand-dark p-4 rounded border border-white/5">
-                                <div class="text-2xl font-bold text-brand-accent">41%</div>
-                                <div class="text-xs text-gray-500">Open Rate (Avg)</div>
-                            </div>
-                            <div class="bg-brand-dark p-4 rounded border border-white/5">
-                                <div class="text-2xl font-bold text-brand-accent">+27.3%</div>
-                                <div class="text-xs text-gray-500">Subscriber Growth</div>
-                            </div>
-                            <div class="col-span-2 bg-brand-dark p-4 rounded border border-white/5">
-                                <div class="text-2xl font-bold text-white">719K+</div>
-                                <div class="text-xs text-gray-500">Total Views (12 Months)</div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- CRISIS & TOOLS -->
+    <section class="py-24 px-6 bg-dark border-t border-white/5">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16">
+            <div class="fade-in">
+                <h3 class="text-xl font-bold mb-6 flex items-center gap-3">
+                    <i data-lucide="shield" class="text-neon"></i> Crisis & Brand Safety
+                </h3>
+                <p class="text-gray-400 mb-6 leading-relaxed">
+                    Managed social media during moments of public grief and political tension. Prioritizing clarity, safety, and trust while maintaining engagement.
+                </p>
+                <div class="flex flex-wrap gap-2">
+                    <span class="px-3 py-1 bg-white/5 text-gray-300 text-xs uppercase tracking-wider rounded border border-white/10">Tone Calibration</span>
+                    <span class="px-3 py-1 bg-white/5 text-gray-300 text-xs uppercase tracking-wider rounded border border-white/10">Policy Awareness</span>
+                    <span class="px-3 py-1 bg-white/5 text-gray-300 text-xs uppercase tracking-wider rounded border border-white/10">Moderation</span>
                 </div>
             </div>
 
-            <!-- SVG Chart -->
-            <div class="w-full h-64 bg-brand-black rounded-lg border border-white/5 p-6 relative">
-                <h4 class="text-xs uppercase text-gray-500 mb-4 tracking-widest">Subscriber Growth Trajectory</h4>
-                <svg viewBox="0 0 800 200" class="w-full h-full overflow-visible">
-                    <!-- Grid Lines -->
-                    <line x1="0" y1="180" x2="800" y2="180" stroke="#333" stroke-width="1" />
-                    <line x1="0" y1="100" x2="800" y2="100" stroke="#333" stroke-width="1" stroke-dasharray="4" />
-                    <line x1="0" y1="20" x2="800" y2="20" stroke="#333" stroke-width="1" stroke-dasharray="4" />
-                    
-                    <!-- Line Chart -->
-                    <path d="M0,150 C100,145 200,140 300,100 C400,60 500,80 600,40 C700,10 800,5" fill="none" stroke="#ff3333" stroke-width="3" />
-                    
-                    <!-- Points -->
-                    <circle cx="0" cy="150" r="4" fill="#ff3333" />
-                    <circle cx="300" cy="100" r="4" fill="#ff3333" />
-                    <circle cx="600" cy="40" r="4" fill="#ff3333" />
-                    <circle cx="800" cy="5" r="4" fill="#ff3333" />
-                    
-                    <!-- Labels -->
-                    <text x="0" y="195" fill="#666" font-size="12">Q1</text>
-                    <text x="260" y="195" fill="#666" font-size="12">Q2</text>
-                    <text x="530" y="195" fill="#666" font-size="12">Q3</text>
-                    <text x="780" y="195" fill="#666" font-size="12">Q4</text>
-                </svg>
+            <div class="fade-in">
+                <h3 class="text-xl font-bold mb-6">Tools & Stack</h3>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="figma" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Figma</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="bar-chart-2" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Analytics</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="file-text" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Substack</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="slack" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Slack</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="video" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Premiere</p>
+                    </div>
+                    <div class="p-4 bg-white/5 rounded border border-white/5 hover:border-neon/50 transition-colors">
+                        <i data-lucide="mail" class="w-6 h-6 mx-auto mb-2 text-gray-300"></i>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-500">Mailchimp</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- 7. CRISIS & BRAND SAFETY -->
-    <section class="py-16 bg-brand-black border-t border-white/5">
-        <div class="max-w-3xl mx-auto px-6 text-center">
-            <h2 class="font-display text-3xl font-bold mb-6">Crisis, Community & Brand Safety</h2>
-            <div class="flex flex-wrap justify-center gap-4 mb-8">
-                <div class="flex items-center text-gray-300 px-4 py-2 bg-brand-dark rounded-full border border-white/10">
-                    <i class="fas fa-check text-brand-accent mr-2"></i> Tone Calibration
-                </div>
-                <div class="flex items-center text-gray-300 px-4 py-2 bg-brand-dark rounded-full border border-white/10">
-                    <i class="fas fa-check text-brand-accent mr-2"></i> Platform Policy Awareness
-                </div>
-                <div class="flex items-center text-gray-300 px-4 py-2 bg-brand-dark rounded-full border border-white/10">
-                    <i class="fas fa-check text-brand-accent mr-2"></i> Comment Moderation
-                </div>
-                <div class="flex items-center text-gray-300 px-4 py-2 bg-brand-dark rounded-full border border-white/10">
-                    <i class="fas fa-check text-brand-accent mr-2"></i> Leadership Alignment
-                </div>
-            </div>
-            <p class="text-gray-400">"This work prioritizes clarity, trust, and safety while maintaining engagement."</p>
+    <!-- FOOTER -->
+    <footer id="contact" class="py-32 px-6 text-center border-t border-white/5">
+        <h2 class="text-5xl md:text-8xl font-bold mb-12 tracking-tighter fade-in">
+            READY TO <br/><span class="text-neon italic font-playfair">GROW?</span>
+        </h2>
+        <div class="flex flex-col md:flex-row justify-center gap-8 mb-12 fade-in">
+            <a href="mailto:zaynsilvad@gmail.com" class="text-xl hover:text-neon transition-colors">zaynsilvad@gmail.com</a>
+            <a href="https://www.linkedin.com/in/zayn-silva/" class="text-xl hover:text-neon transition-colors">LinkedIn</a>
+            <a href="Zayn_Silva_Social_Media_Resume.docx" class="text-xl hover:text-neon transition-colors" download>Download Resume</a>
         </div>
-    </section>
-
-    <!-- 8. TOOLS & SKILLS -->
-    <section id="skills" class="py-24 bg-brand-dark border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                
-                <!-- Tools -->
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-6 uppercase tracking-wider">Tech Stack & Tools</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Figma</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Canva</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Adobe Creative Suite</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Substack</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Mailchimp</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Google Analytics</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Slack</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Monday.com</div>
-                        <div class="bg-brand-black p-3 rounded text-sm text-gray-300 border border-white/5 text-center">Instagram Insights</div>
-                    </div>
-                </div>
-
-                <!-- Skills -->
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-6 uppercase tracking-wider">Strategic Capabilities</h3>
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Social Strategy & Roadmapping</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Editorial Planning & Systems</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Copywriting & Voice</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Visual Storytelling</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Community Engagement</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                        <div class="flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-gray-300">Executive Social Presence</span>
-                            <i class="fas fa-check text-brand-accent"></i>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- 9. CONTACT -->
-    <footer id="contact" class="py-20 bg-brand-black border-t border-brand-accent/30 relative">
-        <div class="max-w-4xl mx-auto px-6 text-center">
-            <h2 class="font-display text-4xl md:text-6xl font-bold mb-8">Ready to grow?</h2>
-            <div class="flex justify-center gap-6 mb-12">
-                <a href="https://www.linkedin.com/in/zayn-silva/" target="_blank" class="px-6 py-3 rounded-full border border-gray-700 flex items-center justify-center text-gray-300 hover:bg-brand-accent hover:text-white hover:border-brand-accent transition-all">
-                    <i class="fab fa-linkedin-in mr-2"></i> LinkedIn
-                </a>
-                <a href="mailto:zaynsilvad@gmail.com" class="px-6 py-3 rounded-full border border-gray-700 flex items-center justify-center text-gray-300 hover:bg-brand-accent hover:text-white hover:border-brand-accent transition-all">
-                    <i class="fas fa-envelope mr-2"></i> Email Me
-                </a>
-                <a href="Zayn_Silva_Social_Media_Resume.docx" class="px-6 py-3 rounded-full border border-gray-700 flex items-center justify-center text-gray-300 hover:bg-brand-accent hover:text-white hover:border-brand-accent transition-all" download>
-                    <i class="fas fa-file-alt mr-2"></i> Resume
-                </a>
-            </div>
-            <p class="text-gray-600 text-sm">© 2025 Zayn Silva. All rights reserved.</p>
-        </div>
+        <p class="text-gray-600 text-sm">© 2025 Zayn Silva.</p>
     </footer>
 
-    <!-- Simple animations script -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                threshold: 0.1
-            };
+        lucide.createIcons();
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in-up');
-                    }
-                });
-            }, observerOptions);
-
-            document.querySelectorAll('section h2, section p, .grid > div, table').forEach(el => {
-                observer.observe(el);
+        // Number Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const counterObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 1500;
+                    const increment = target / (duration / 20);
+                    
+                    let current = 0;
+                    const updateCount = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.innerText = Math.ceil(current);
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    updateCount();
+                    observer.unobserve(counter);
+                }
             });
-        });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // Fade In Animation
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        // Chart Animation Observer
+        const chartObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const container = entry.target;
+                    container.querySelector('.chart-path').classList.add('active');
+                    container.querySelector('.chart-area').classList.add('active');
+                    container.querySelectorAll('.chart-point').forEach(point => point.classList.add('active'));
+                    chartObserver.unobserve(container);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.chart-container').forEach(el => chartObserver.observe(el));
     </script>
 </body>
 </html>
