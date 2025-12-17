@@ -168,7 +168,8 @@
                 <!-- Headshot -->
                 <div class="relative w-full md:w-80 aspect-[3/4] group mr-auto">
                     <div class="absolute inset-0 border border-neon/50 translate-x-3 translate-y-3 transition-transform group-hover:translate-x-2 group-hover:translate-y-2"></div>
-                    <img src="images/zayn_photo.jpg" onerror="this.src='https://placehold.co/600x800/111/444?text=Zayn+Headshot'" class="w-full h-full object-cover relative z-10 grayscale group-hover:grayscale-0 transition-all duration-500" alt="Zayn Silva">
+                    <!-- REMOVED grayscale class -->
+                    <img src="images/zayn_photo.jpg" onerror="this.src='https://placehold.co/600x800/111/444?text=Zayn+Headshot'" class="w-full h-full object-cover relative z-10 transition-all duration-500" alt="Zayn Silva">
                 </div>
                 
                 <!-- Bio -->
@@ -596,24 +597,32 @@
                 if (entry.isIntersecting) {
                     const counter = entry.target;
                     const target = +counter.getAttribute('data-target');
-                    const duration = 1500;
+                    const duration = 2000; // Duration in ms
                     const increment = target / (duration / 20);
                     
                     let current = 0;
-                    const updateCount = () => {
-                        current += increment;
-                        if (current < target) {
-                            counter.innerText = Math.ceil(current);
-                            setTimeout(updateCount, 20);
-                        } else {
-                            counter.innerText = target;
-                        }
-                    };
-                    updateCount();
+                    
+                    // Small delay to ensure user sees the start
+                    setTimeout(() => {
+                        const updateCount = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.innerText = Math.ceil(current);
+                                setTimeout(updateCount, 20);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        updateCount();
+                    }, 200);
+
                     observer.unobserve(counter);
                 }
             });
-        }, { threshold: 0.5 });
+        }, { 
+            threshold: 0.75, // Wait until 75% of the element is visible
+            rootMargin: "0px 0px -50px 0px" // Trigger slightly after it enters viewport
+        });
 
         counters.forEach(counter => counterObserver.observe(counter));
 
